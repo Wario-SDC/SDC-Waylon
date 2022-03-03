@@ -1,0 +1,27 @@
+const mongoose = require('mongoose');
+mongoose.connect('mongodb://localhost/fetcher');
+
+
+let answersSchema = mongoose.schema ({
+  answer_id: {type: Object ID, required: true},
+  body: {type: String, maxlength: 500, required: true},
+  user: {type: String, maxlength: 50, required: true},
+  email: {type: String, maxlength: 50, required: true},
+  date: {type: Date, required: true},
+  helpfulness: {type: Integer, required: true},
+  reported: {type: Boolean, required: true},
+  product_id: {type: Integer, required: true},
+  photos: {type: Array}
+})
+
+let questionsSchema = mongoose.schema ({
+  question_id: {type: Object ID, required: true},
+  body: {type: String, maxlength: 500, required: true},
+  user: {type: String, maxlength: 50, required: true},
+  email: {type: String, maxlength: 50, required: true},
+  date: {type: Date, required: true},
+  helpfulness: {type: Integer, required: true},
+  reported: {type: Boolean, required: true},
+  product_id: {type: Integer, required: true},
+  answers: {type: [answersSchema]}
+})

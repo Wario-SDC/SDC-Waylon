@@ -1,0 +1,24 @@
+{
+  "name": "sdc-waylon",
+  "version": "1.0.0",
+  "description": "\"Replace the previously provided, underperforming API used for the FEC Project. Rebuild a service within the API from scratch, focusing on optimizing performance and accommodating web traffic.\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wario-SDC/SDC-Waylon.git"
+  },
+  "author": "Waylon",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Wario-SDC/SDC-Waylon/issues"
+  },
+  "homepage": "https://github.com/Wario-SDC/SDC-Waylon#readme",
+  "dependencies": {
+    "express": "^4.17.3",
+    "nodemon": "^2.0.15"
+  }
+}
