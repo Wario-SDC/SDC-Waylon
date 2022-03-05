@@ -1,9 +1,10 @@
 const { Pool } = require('pg')
+const pass = require('../config.js')
 
 const pool = new Pool({
   host: 'localhost',
   user: 'postgres',
-  password: 'Mjolnir117!',
+  password: pass,
   database: 'qna',
   max: 20,
   idleTimeoutMillis: 30000,
