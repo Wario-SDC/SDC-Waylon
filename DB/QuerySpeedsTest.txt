@@ -1,0 +1,25 @@
+DB Query speedtests from 04/04/2022 -
+
+  qna=# EXPLAIN ANALYZE SELECT * FROM questions;
+                                                        QUERY PLAN
+  -----------------------------------------------------------------------------------------------------------------------
+  Seq Scan on questions  (cost=0.00..96870.80 rows=3519380 width=106) (actual time=0.016..629.055 rows=3518963 loops=1)
+  Planning Time: 0.155 ms
+  Execution Time: 948.363 ms
+  (3 rows)
+
+  qna=# EXPLAIN ANALYZE SELECT * FROM answers;
+                                                        QUERY PLAN
+  -----------------------------------------------------------------------------------------------------------------------
+  Seq Scan on answers  (cost=0.00..188659.37 rows=6879637 width=105) (actual time=0.006..1217.448 rows=6879306 loops=1)
+  Planning Time: 0.078 ms
+  Execution Time: 1823.950 ms
+  (3 rows)
+
+  qna=# EXPLAIN ANALYZE SELECT * FROM photos;
+                                                      QUERY PLAN
+  --------------------------------------------------------------------------------------------------------------------
+  Seq Scan on photos  (cost=0.00..64487.23 rows=2063823 width=140) (actual time=0.034..415.379 rows=2063759 loops=1)
+  Planning Time: 0.050 ms
+  Execution Time: 574.242 ms
+  (3 rows)
