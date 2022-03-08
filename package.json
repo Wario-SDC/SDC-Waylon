@@ -4,7 +4,7 @@
   "description": "\"Replace the previously provided, underperforming API used for the FEC Project. Rebuild a service within the API from scratch, focusing on optimizing performance and accommodating web traffic.\"",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test jest --runInBand --force-exit",
     "start": "nodemon server/index.js"
   },
   "repository": {
@@ -21,8 +21,11 @@
     "csv": "^6.0.5",
     "express": "^4.17.3",
     "fs": "^0.0.1-security",
+    "jest": "^27.5.1",
+    "jsdom": "^19.0.0",
     "nodemon": "^2.0.15",
     "pg": "^8.7.3",
-    "postgres": "^1.0.2"
+    "postgres": "^1.0.2",
+    "supertest": "^6.2.2"
   }
 }

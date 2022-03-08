@@ -1,4 +1,4 @@
-DB Query speedtests from 04/04/2022 -
+DB Query speedtests from 03/04/2022 -
 
   qna=# EXPLAIN ANALYZE SELECT * FROM questions;
                                                         QUERY PLAN
@@ -23,3 +23,23 @@ DB Query speedtests from 04/04/2022 -
   Planning Time: 0.050 ms
   Execution Time: 574.242 ms
   (3 rows)
+
+Postman request speedtests from 03/07/2022 -
+  GET /qa/questions/(any product ID): 5 - 10 seconds
+
+  GET /qa/questions/:question_id/answers: 2-3 seconds
+
+  POST /qa/questions: 75ms
+
+  POST /qa/questions/:question_id/answers: 42ms
+
+  PUT /qa/questions/:question_id/helpful: 10ms
+
+  PUT /qa/questions/:question_id/report: 53ms
+
+  PUT /qa/answers/:answer_id/helpful: 53ms
+
+  PUT /qa/answers/:answer_id/report: 9ms
+
+
+

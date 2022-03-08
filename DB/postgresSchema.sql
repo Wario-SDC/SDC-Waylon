@@ -9,23 +9,23 @@ DROP TABLE IF EXISTS questions, answers, photos;
 CREATE TABLE questions(
   question_id BIGSERIAL PRIMARY KEY,
   product_id INT NOT NULL,
-  body TEXT NOT NULL,
-  time_stamp TIMESTAMPTZ NOT NULL,
-  username VARCHAR(50) NOT NULL,
+  question_body TEXT NOT NULL,
+  question_date TIMESTAMPTZ DEFAULT Now(),
+  asker_name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
-  reported BOOLEAN NOT NULL,
-  helpfull INT NOT NULL
+  reported BOOLEAN DEFAULT false,
+  question_helpfulness INT DEFAULT 0
 );
 
 CREATE TABLE answers(
   answer_id BIGSERIAL PRIMARY KEY,
   question_id INT NOT NULL,
   body TEXT NOT NULL,
-  time_stamp TIMESTAMPTZ NOT NULL,
-  username VARCHAR(50) NOT NULL,
+  "date" TIMESTAMPTZ DEFAULT Now(),
+  answerer_name VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
-  reported BOOLEAN NOT NULL,
-  helpfull INT NOT NULL
+  reported BOOLEAN DEFAULT false,
+  helpfulness INT DEFAULT 0
 );
 
 CREATE TABLE photos(
