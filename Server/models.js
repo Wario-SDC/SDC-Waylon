@@ -1,13 +1,15 @@
 const { Pool } = require('pg')
+const pass = require('../config.js')
 
 const pool = new Pool({
   host: 'localhost',
   user: 'postgres',
-  password: 'Mjolnir117!',
+  password: pass.pass,
   database: 'qna',
-  max: 20,
-  idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  port: 5432
+  // max: 20,
+  // idleTimeoutMillis: 30000,
+  // connectionTimeoutMillis: 2000,
 })
 
 // questions related to a product
@@ -16,7 +18,16 @@ const getQuestions = (productID, count = 5, callback) => {
   // const queryString = `SELECT * FROM questions WHERE product_id = $1 AND reported = $2 LIMIT $3`
   // const queryString = `SELECT questions.*,
   //                      json_build_object('answers', (SELECT json_agg(row_to_json(answers))FROM answers WHERE answers.question_id = questions.question_id AND reported = $2)) FROM questions WHERE questions.product_id = $1 AND reported = $2 LIMIT $3`;
-  const queryString = `SELECT *, (SELECT json_object_agg(a.answer_id, row_to_json(a)) FROM (SELECT *, (SELECT json_agg(p) FROM (SELECT photo_url FROM photos WHERE answer_id = answers.answer_id) p) photos FROM answers WHERE question_id = questions.question_id) a) answers FROM questions WHERE product_id = $1 AND reported = $2 ORDER BY question_id ASC LIMIT $3`;
+  const queryString = `SELECT questions.question_id,
+                              questions.question_body,
+                              questions.question_date,
+                              questions.asker_name,
+                              questions.question_helpfulness,
+                              questions.reported,
+                              (SELECT json_object_agg(a.answer_id, row_to_json(a))
+                              FROM (SELECT *, (SELECT json_agg(p)
+                              FROM (SELECT photo_url FROM photos WHERE answer_id = answers.answer_id) p) photos FROM answers WHERE question_id = questions.question_id) a) answers
+                       FROM questions WHERE product_id = $1 AND reported = $2 ORDER BY question_id ASC LIMIT $3`;
 
 pool.query(queryString, queryArgs, (err, questions) => {
     //console.log(questions)
@@ -24,7 +35,12 @@ pool.query(queryString, queryArgs, (err, questions) => {
         console.log(err);
         callback(err);
       } else {
-        callback(null, questions.rows);
+        let questionObj = {
+          product_id: productID,
+          results: questions.rows
+        };
+
+        callback(null, questionObj);
       }
     });
 }
@@ -67,16 +83,34 @@ const questionReport = (questionID, callback) => {
 
 // get answers related to a question
 const getAnswers = (questionID, count = 5, callback) => {
-  // 'SELECT * FROM answers WHERE question_id = $1 AND reported = $3 LIMIT $2'
-  const queryString = `SELECT *, (SELECT json_agg(p) FROM (SELECT photo_id, photo_url FROM photos WHERE answer_id = answers.answer_id) p) photos FROM answers WHERE question_id = $1 AND reported = $2 ORDER BY answer_id ASC LIMIT $3`;
-  const queryArgs = [questionID, false, count];
+  // const queryString = `SELECT answers.answer_id,
+  //                             answers.body,
+  //                             answers.date,
+  //                             answers.answerer_name,
+  //                             answers.helpfulness,
+  //                             (SELECT json_agg(p) FROM (SELECT photo_id, photo_url FROM photos WHERE answer_id = answers.answer_id) p) photos FROM answers WHERE question_id = $1 AND reported = $2 ORDER BY answer_id ASC LIMIT $3`;
+  const queryString = `SELECT
+  a.answer_id,
+  a.body,
+  a.date,
+  a.answerer_name,
+  a.helpfulness,
+  json_agg(json_build_object('id', p.photo_id, 'url', p.photo_url)) AS photos
+  FROM answers a
+  LEFT JOIN photos p
+  ON a.answer_id = p.answer_id
+  WHERE a.question_id = $1
+  AND a.reported = $2
+  GROUP BY a.answer_id
+  LIMIT $3`
+  let queryArgs = [questionID, false, count];
   pool.query(queryString, queryArgs, (err, answers) => {
     if (err) {
       callback(err);
     } else {
       callback(null, answers.rows);
-    }
-  })
+     }
+    })
 }
 
 // post a new answer

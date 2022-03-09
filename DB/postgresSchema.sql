@@ -33,3 +33,7 @@ CREATE TABLE photos(
   answer_id INT NOT NULL,
   photo_url VARCHAR(150) NOT NULL
 );
+
+CREATE INDEX ON answers (question_id);
+CREATE INDEX ON photos (answer_id);
+CREATE INDEX ON questions (reported) WHERE reported = (false);
