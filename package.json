@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "jest --force-exit --runInBand",
-    "start": "nodemon server/index.js",
+    "start": "nodemon Server/index.js",
     "db": "psql -d qna -U postgres",
     "stress": "k6 run testing/k6.test.js"
   },
