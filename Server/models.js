@@ -6,21 +6,26 @@ const getQuestions = (productID, count = 5, callback) => {
   // const queryString = `SELECT * FROM questions WHERE product_id = $1 AND reported = $2 LIMIT $3`
   // const queryString = `SELECT questions.*,
   //                      json_build_object('answers', (SELECT json_agg(row_to_json(answers))FROM answers WHERE answers.question_id = questions.question_id AND reported = $2)) FROM questions WHERE questions.product_id = $1 AND reported = $2 LIMIT $3`;
+  // const queryString = `SELECT questions.question_id,
+  //                             questions.question_body,
+  //                             questions.question_date,
+  //                             questions.asker_name,
+  //                             questions.question_helpfulness,
+  //                             questions.reported,
+  //                             (SELECT json_object_agg(a.answer_id, row_to_json(a))
+  //                             FROM (SELECT *, (SELECT json_agg(p)
+  //                             FROM (SELECT photo_url FROM photos WHERE answer_id = answers.answer_id) p) photos FROM answers WHERE question_id = questions.question_id) a) answers
+  //                      FROM questions WHERE product_id = $1 AND reported = $2 ORDER BY question_id ASC LIMIT $3`;
   const queryString = `SELECT questions.question_id,
                               questions.question_body,
                               questions.question_date,
                               questions.asker_name,
                               questions.question_helpfulness,
                               questions.reported,
-                              (SELECT json_object_agg(a.answer_id, row_to_json(a))
-                              FROM (SELECT *, (SELECT json_agg(p)
-                              FROM (SELECT photo_url FROM photos WHERE answer_id = answers.answer_id) p) photos FROM answers WHERE question_id = questions.question_id) a) answers
-                       FROM questions WHERE product_id = $1 AND reported = $2 ORDER BY question_id ASC LIMIT $3`;
+                              json_build_object('answers', (SELECT json_agg(row_to_json(answers))FROM answers WHERE answers.question_id = questions.question_id AND reported = $2)) FROM questions WHERE questions.product_id = $1 AND reported = $2 LIMIT $3`;
 
 db.query(queryString, queryArgs, (err, questions) => {
-    //console.log(questions)
       if (err) {
-        console.log(err);
         callback(err);
       } else {
         let questionObj = {
@@ -106,12 +111,10 @@ const addAnswer = (questionID, body, callback) => {
   const queryArgs = [questionID, body.body, body.name, body.email];
   db.query('INSERT INTO answers (question_id, body, answerer_name, email) VALUES ($1, $2, $3, $4)', queryArgs, (err) => {
     if (err) {
-      console.log(err);
       callback(err);
     } else {
       if (body.photos && body.photos.length > 0) {
         photosArr = body.photos.split(',');
-        console.log(photosArr[1]);
         photosArr.map((photo) => {
           const photoArgs = [photo];
           db.query('INSERT INTO photos (photo_url, answer_id) VALUE ($1, (SELECT * FROM answers ORDER BY answer_id DESC limit 1))', photoArgs, (err) => {

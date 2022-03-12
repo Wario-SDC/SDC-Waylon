@@ -35,7 +35,7 @@ export const options = {
   scenarios: {
     constant_request_rate: {
       executor: 'constant-arrival-rate',
-      rate: 10000,
+      rate: 1000,
       timeUnit: '1s',
       duration: '30s',
       preAllocatedVUs: 100,
@@ -45,6 +45,11 @@ export const options = {
 }
 
 export default function () {
+  const prodID = function getRandomIntInclusive(1, 1000000) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
   // http.get('http://localhost:3000/qa/questions/1/');
-  http.get('http://localhost:3000/qa/questions/10/answers');
+  http.get(`54.146.253.131:3000/qa/questions/${prodID}`);
 }
